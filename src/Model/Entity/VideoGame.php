@@ -235,4 +235,13 @@ class VideoGame
     {
         return $this->reviews->exists(static fn (int $key, Review $review): bool => $review->getUser() === $user);
     }
+
+    public function addTag(?Tag $tag): VideoGame
+    {
+        if (null !== $tag) {
+           $this->tags->add($tag);
+        }
+
+        return $this;
+    }
 }
