@@ -18,8 +18,6 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
 {
     public function __construct(
         private readonly Generator $faker,
-        private readonly CalculateAverageRating $calculateAverageRating,
-        private readonly CountRatingsPerValue $countRatingsPerValue
     ) {
     }
 
@@ -32,11 +30,11 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
             ->setDescription($this->faker->paragraphs(10, true))
             ->setReleaseDate(new DateTimeImmutable())
             ->setTest($this->faker->paragraphs(6, true))
-            ->setRating(($index % 5) + 1)
+            ->setRating(rand(1,5))
             ->setImageName(sprintf('video_game_%d.png', $index))
             ->setImageSize(2_098_872)
-            ->addTag($index % 2 === 0 ? $tags[$index % count($tags)] : null)
-            ->addTag($index % 3 === 0 ? $tags[0] : null)
+            ->addTag($index % 2 === 0 ? $tags[rand(0, count($tags)-1)] : null)
+            ->addTag($index % 3 === 0 ? $tags[rand(0, count($tags)-1)] : null)
         );
 
         array_walk($videoGames, [$manager, 'persist']);
