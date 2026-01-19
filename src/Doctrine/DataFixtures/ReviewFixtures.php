@@ -40,7 +40,7 @@ final class ReviewFixtures extends Fixture implements DependentFixtureInterface
 
         $manager->flush();
 
-        $videoGames = $manager->getRepository(VideoGame::class)->findBy([], limit: 40);
+        $videoGames = $manager->getRepository(VideoGame::class)->findAll();
 
         foreach ($videoGames as $videoGame) {
             $this->calculateAverageRating->calculateAverage($videoGame);
