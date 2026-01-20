@@ -4,25 +4,24 @@ namespace App\Tests\Unit\Rating;
 
 use App\Model\Entity\Review;
 use App\Model\Entity\VideoGame;
+use App\Rating\CalculateAverageRating;
 use App\Rating\RatingHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Doctrine\Common\Collections\Collection;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 class CalculateAverageRatingTest extends TestCase
 {
     /**
      * @dataProvider ratingsForVideoGame
      */
-    public function testCalculateAverage($array, $average): void
+    public function testCalculateAverage(array $array, ?int $average): void
     {
         $videoGame = new VideoGame();
         foreach ($array as $value) {
-            $review = $this
-                ->getMockBuilder(Review::class)
-                ->disableOriginalConstructor()
-                ->getMock();
-            $review->method('getRating')->willReturn($value);
+            $review = new Review();
+            $review->setRating($value);
             $videoGame->getReviews()->add($review);
         }
 
