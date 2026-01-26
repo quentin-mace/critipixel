@@ -26,3 +26,5 @@ php.local.ini
 .idea
 /.idea/
 
+/public/test-coverage/
+
