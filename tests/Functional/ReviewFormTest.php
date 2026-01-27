@@ -38,7 +38,7 @@ class ReviewFormTest extends WebTestCase
         $this->urlGenerator = $this->client->getContainer()->get('router.default');
     }
 
-    public function testReviewForm(): void
+    public function testReviewFormWithValidData(): void
     {
         // Connecter un utilisateur
         $this->client->loginUser($this->testUser);
@@ -47,6 +47,7 @@ class ReviewFormTest extends WebTestCase
         $reviewsToDelete = $this->reviewRepository->findBy(['user'=>$this->testUser, 'videoGame'=>$this->randomVideoGame]);
         foreach ($reviewsToDelete as $reviewToDelete) {
             $this->client->getContainer()->get('doctrine.orm.entity_manager')->remove($reviewToDelete);
+            $this->client->getContainer()->get('doctrine.orm.entity_manager')->flush();
         }
 
         // Se connecter à la page de ce jeu
@@ -68,7 +69,10 @@ class ReviewFormTest extends WebTestCase
         // Verifier que la note est bien présente en BDD
         $reviews = $this->reviewRepository->findBy(['user'=>$this->testUser, 'videoGame'=>$this->randomVideoGame]);
         $this->assertCount(1, $reviews);
+        $this->assertSame(5, $reviews[0]->getRating());
+        $this->assertSame('Un commentaire random', $reviews[0]->getComment());
 
         // Vérifier que le formulaire d'ajout de note n'est plus disponible
+        $this->assertSelectorNotExists('form [name="review"]', 'Poster');
     }
 }
