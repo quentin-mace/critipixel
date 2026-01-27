@@ -75,4 +75,57 @@ class ReviewFormTest extends WebTestCase
         // Vérifier que le formulaire d'ajout de note n'est plus disponible
         $this->assertSelectorNotExists('form [name="review"]', 'Poster');
     }
+
+    public function testReviewFormWithInvalidRating(): void
+    {
+        // Connecter un utilisateur
+        $this->client->loginUser($this->testUser);
+
+        // Supprimer toutes les reviews de cet utilisateur sur un jeu random
+        $reviewsToDelete = $this->reviewRepository->findBy(['user'=>$this->testUser, 'videoGame'=>$this->randomVideoGame]);
+        foreach ($reviewsToDelete as $reviewToDelete) {
+            $this->client->getContainer()->get('doctrine.orm.entity_manager')->remove($reviewToDelete);
+            $this->client->getContainer()->get('doctrine.orm.entity_manager')->flush();
+        }
+
+        // Se connecter à la page de ce jeu
+        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('video_games_show', ['slug' => $this->randomVideoGame->getSlug()]));
+
+        // Selectionner le formulaire de note et remplir
+        $form = $crawler->selectButton('Poster')->form();
+        $form->disableValidation();
+        $form['review[rating]'] = 6;
+        $form['review[comment]'] = 'Un commentaire random';
+
+        // Envoyer le formulaire
+        $this->client->submit($form);
+
+        // Verifier que l'on à bien une erreur de validation (422)
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public function testReviewFormWithDisconectedUser(): void
+    {
+        $slug = $this->randomVideoGame->getSlug();
+
+        // Se connecter à la page de ce jeu
+        $crawler = $this->client->request(Request::METHOD_GET, $this->urlGenerator->generate('video_games_show', ['slug' => $slug]));
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+
+        // Vérifier que le formulaire d'ajout de note n'est pas disponible
+        $this->assertSelectorNotExists('form [name="review"]', 'Poster');
+
+        // Tenter de poster comme si on envoyait le formulaire
+        $data = ['review[rating]' => 5, 'review[comment]' => 'Un commentaire random' ];
+        $jsonData = json_encode($data);
+
+        $this->client->request(
+            Request::METHOD_POST,
+            $this->urlGenerator->generate('video_games_show', ['slug' => $slug]),
+            content: $jsonData
+        );
+
+        // Verifier l'obtention d'une 401
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+    }
 }
