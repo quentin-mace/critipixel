@@ -118,8 +118,6 @@ class ReviewFormTest extends WebTestCase
         // Tenter de poster comme si on envoyait le formulaire
         $data = ['review' => [ 'rating' => 4, 'comment' => 'Un commentaire random' ] ];
 
-        $url = $this->urlGenerator->generate('video_games_show', ['slug' => $slug]);
-
         $this->client->request(
             Request::METHOD_POST,
             $this->urlGenerator->generate('video_games_show', ['slug' => $slug]),
