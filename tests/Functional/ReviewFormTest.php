@@ -116,14 +116,15 @@ class ReviewFormTest extends WebTestCase
         $this->assertSelectorNotExists('form [name="review"]', 'Poster');
 
         // Tenter de poster comme si on envoyait le formulaire
-        $data = ['review[rating]' => 5, 'review[comment]' => 'Un commentaire random' ];
-        $jsonData = json_encode($data);
+        $data = ['review' => [ 'rating' => 4, 'comment' => 'Un commentaire random' ] ];
+
+        $url = $this->urlGenerator->generate('video_games_show', ['slug' => $slug]);
 
         $this->client->request(
             Request::METHOD_POST,
             $this->urlGenerator->generate('video_games_show', ['slug' => $slug]),
-            content: $jsonData
-        ); // ToDo : Finir that
+            $data
+        );
 
         // Verifier l'obtention d'une 401
         $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);

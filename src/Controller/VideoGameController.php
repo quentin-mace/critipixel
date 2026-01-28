@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -38,6 +39,10 @@ final class VideoGameController extends AbstractController
         $review = new Review();
 
         $form = $this->createForm(ReviewType::class, $review)->handleRequest($request);
+
+        if ($form->isSubmitted() && !$this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            throw new UnauthorizedHttpException('You must be logged in to review a video game.');
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->denyAccessUnlessGranted('review', $videoGame);
