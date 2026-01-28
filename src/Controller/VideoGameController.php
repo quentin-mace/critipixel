@@ -40,11 +40,15 @@ final class VideoGameController extends AbstractController
 
         $form = $this->createForm(ReviewType::class, $review)->handleRequest($request);
 
-        if ($form->isSubmitted() && !$this->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if (!$form->isSubmitted()) {
+            return $this->render('views/video_games/show.html.twig', ['video_game' => $videoGame, 'form' => $form]);
+        }
+
+        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new UnauthorizedHttpException('You must be logged in to review a video game.');
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isValid()) {
             $this->denyAccessUnlessGranted('review', $videoGame);
             $review->setVideoGame($videoGame);
             $review->setUser($this->getUser());
