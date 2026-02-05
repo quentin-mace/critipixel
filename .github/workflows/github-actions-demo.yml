@@ -17,7 +17,7 @@ jobs:
       - name: Install composer dependencies
         run: composer install
       - name: Up docker containers
-        run: docker-compose up -d
+        run: docker compose up -d
       - name: Delete database (if exists) for tests
         run: symfony console doctrine:database:drop --force --if-exists --env=test
       - name: Create database for tests
