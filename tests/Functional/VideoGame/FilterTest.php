@@ -54,13 +54,20 @@ final class FilterTest extends FunctionalTestCase
         $this->client->submit($form);
 
         // Vérifier que le nombre de résultats correspond à ce qui est présent en BDD
-        $shouldFilter = $data !== [];
-        $videoGamesCount = count($videoGames);
-        $videoGamesCountExpected = $videoGamesCount < 10 ? $videoGamesCount : 10;
-        $expectedResults = $shouldFilter ? $videoGamesCountExpected : 10;
+        $expectedResults = $this->calculateExpectedResult($data, $videoGames);
 
         self::assertResponseIsSuccessful();
         self::assertSelectorCount($expectedResults, 'article.game-card');
+    }
+
+    private function calculateExpectedResult(array $data, array $videoGames): int
+    {
+        $shouldFilter = $data !== [];
+        $videoGamesCount = count($videoGames);
+        if (!$shouldFilter || $videoGamesCount >= 10){
+            return 10;
+        }
+        return $videoGamesCount;
     }
 
     private function removeUnexistingTags(array $data, array $tags): array
