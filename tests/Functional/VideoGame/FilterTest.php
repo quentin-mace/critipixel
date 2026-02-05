@@ -40,12 +40,7 @@ final class FilterTest extends FunctionalTestCase
         $videoGameRepository = $this->service(VideoGameRepository::class);
 
         $tags = $entityManager->getRepository(Tag::class)->findAll();
-        $tagCount = count($tags);
-        foreach ($data as $key => $value){
-            if ($value < 0 || $value >= $tagCount){
-                unset($data[$key]);
-            }
-        }
+        $data = $this->removeUnexistingTags($data, $tags);
 
         $selectedTagIds = array_map(fn (int $value) => $tags[$value]->getId(), $data);
         $videoGames = $videoGameRepository->getVideoGamesByTagIds($selectedTagIds);
@@ -61,18 +56,32 @@ final class FilterTest extends FunctionalTestCase
         // Vérifier que le nombre de résultats correspond à ce qui est présent en BDD
         $shouldFilter = $data !== [];
         $expectedResults = $shouldFilter ? count($videoGames) : 10;
+
         self::assertResponseIsSuccessful();
         self::assertSelectorCount($expectedResults, 'article.game-card');
+    }
+
+    private function removeUnexistingTags(array $data, array $tags): array
+    {
+        $tagCount = count($tags);
+        foreach ($data as $key => $value){
+            if ($value < 0 || $value >= $tagCount){
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
     }
 
     public function provideTagsData(): iterable
     {
         return [
-            [[0, 1]],
-            [[2]],
-            [[0, 2, 3]],
-            [[7]],
-            [[]]
+            [[0, 1]], // Two exisiting tags
+            [[2]], // One existing tag
+            [[0, 2, 3]], // Three existing tags
+            [[7]], // Non existing tag
+            [[8, 2]], // One non existing tag and one existing tag
+            [[]] // No tags
         ];
     }
 }
