@@ -16,6 +16,8 @@ jobs:
         run: composer update
       - name: Install composer dependencies
         run: composer install
+      - name: Install symfony binary
+        run: composer global require symfony/cli -n
       - name: Up docker containers
         run: docker compose up -d
       - name: Delete database (if exists) for tests
