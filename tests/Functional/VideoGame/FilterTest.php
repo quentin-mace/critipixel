@@ -35,13 +35,19 @@ final class FilterTest extends FunctionalTestCase
      */
     public function testShouldFilterVideoGamesByTags(array $data = []): void
     {
-        // Récupérer la liste des tags depuis la BDD
+        // Récupérer les JV avec ces tags
         $entityManager = $this->getEntityManager();
+        $videoGameRepository = $this->service(VideoGameRepository::class);
 
         $tags = $entityManager->getRepository(Tag::class)->findAll();
-        $selectedTagIds = array_map(fn (int $value) => $tags[$value]->getId(), $data);
+        $tagCount = count($tags);
+        foreach ($data as $key => $value){
+            if ($value < 0 || $value >= $tagCount){
+                unset($data[$key]);
+            }
+        }
 
-        $videoGameRepository = $this->service(VideoGameRepository::class);
+        $selectedTagIds = array_map(fn (int $value) => $tags[$value]->getId(), $data);
         $videoGames = $videoGameRepository->getVideoGamesByTagIds($selectedTagIds);
 
         // se connecter à la liste des jeux
@@ -49,21 +55,14 @@ final class FilterTest extends FunctionalTestCase
 
         // Soumettre le formulaire de filtre avec les données fournies
         $form = $crawler->selectButton('Filtrer')->form();
-        $select = $form['filter[tags]'];
-        foreach ($data as $value){
-            $checkbox = $select[$value];
-            $checkbox->tick();
-        }
+        $this->tickCheckboxes($form, 'filter[tags]', $data);
         $this->client->submit($form);
 
         // Vérifier que le nombre de résultats correspond à ce qui est présent en BDD
         $shouldFilter = $data !== [];
-        $expectedResults = $data !== [] ? count($videoGames) : 10;
+        $expectedResults = $shouldFilter ? count($videoGames) : 10;
         self::assertResponseIsSuccessful();
         self::assertSelectorCount($expectedResults, 'article.game-card');
-
-        // ToDo : Trouver comment gerer le submit d'un tag inexistant
-
     }
 
     public function provideTagsData(): iterable
@@ -72,7 +71,8 @@ final class FilterTest extends FunctionalTestCase
             [[0, 1]],
             [[2]],
             [[0, 2, 3]],
-            [[]],
+            [[7]],
+            [[]]
         ];
     }
 }

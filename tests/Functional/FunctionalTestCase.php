@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\DomCrawler\Form;
 
 abstract class FunctionalTestCase extends WebTestCase
 {
@@ -45,5 +46,14 @@ abstract class FunctionalTestCase extends WebTestCase
         $user = $this->service(EntityManagerInterface::class)->getRepository(User::class)->findOneByEmail($email);
 
         $this->client->loginUser($user);
+    }
+
+    protected function tickCheckboxes(Form $form, string $fieldName, array $checkboxIndexes): void
+    {
+        $select = $form[$fieldName];
+        foreach ($checkboxIndexes as $index){
+            $checkbox = $select[$index];
+            $checkbox->tick();
+        }
     }
 }
