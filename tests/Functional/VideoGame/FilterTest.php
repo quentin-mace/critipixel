@@ -55,7 +55,9 @@ final class FilterTest extends FunctionalTestCase
 
         // Vérifier que le nombre de résultats correspond à ce qui est présent en BDD
         $shouldFilter = $data !== [];
-        $expectedResults = $shouldFilter ? count($videoGames) : 10;
+        $videoGamesCount = count($videoGames);
+        $videoGamesCountExpected = $videoGamesCount < 10 ? $videoGamesCount : 10;
+        $expectedResults = $shouldFilter ? $videoGamesCountExpected : 10;
 
         self::assertResponseIsSuccessful();
         self::assertSelectorCount($expectedResults, 'article.game-card');
