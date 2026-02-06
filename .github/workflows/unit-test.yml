@@ -19,7 +19,6 @@ jobs:
       - uses:                 shivammathur/setup-php@v2
         with:
           php-version:        '8.4'
-#      - run:                  composer update
       - run:                  composer install --prefer-dist --no-progress
       - run:                  php bin/console doctrine:database:create --env=test
       - run:                  php bin/console doctrine:migrations:migrate -n --env=test
