@@ -7,19 +7,14 @@ use App\Model\Entity\VideoGame;
 use App\Rating\RatingHandler;
 use PHPUnit\Framework\TestCase;
 
-class CountRatingPerValueTest extends TestCase
+class CountRatingPerValueTest extends RatingTestCase
 {
     /**
      * @dataProvider ratingsForCountRating
      */
-    public function testCountRatingsPerValue(array $ratingValueSet, array $expectedValues): void
+    public function testCountRatingsPerValue(array $ratings, array $expectedValues): void
     {
-        $videoGame = new VideoGame();
-        foreach ($ratingValueSet as $value){
-            $review = new Review();
-            $review->setRating($value);
-            $videoGame->getReviews()->add($review);
-        }
+        $videoGame = $this->createVideoGameWithRatings($ratings);
 
         $ratingHandler = new RatingHandler();
         $ratingHandler->countRatingsPerValue($videoGame);

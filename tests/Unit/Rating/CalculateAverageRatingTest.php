@@ -11,19 +11,14 @@ use PHPUnit\Framework\TestCase;
 use Doctrine\Common\Collections\Collection;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
-class CalculateAverageRatingTest extends TestCase
+class CalculateAverageRatingTest extends RatingTestCase
 {
     /**
      * @dataProvider ratingsForVideoGame
      */
-    public function testCalculateAverage(array $array, ?int $average): void
+    public function testCalculateAverage(array $ratings, ?int $average): void
     {
-        $videoGame = new VideoGame();
-        foreach ($array as $value) {
-            $review = new Review();
-            $review->setRating($value);
-            $videoGame->getReviews()->add($review);
-        }
+        $videoGame = $this->createVideoGameWithRatings($ratings);
 
         $ratingHandler = new RatingHandler();
         $ratingHandler->calculateAverage($videoGame);
