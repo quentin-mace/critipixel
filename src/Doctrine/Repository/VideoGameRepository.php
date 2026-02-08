@@ -66,4 +66,21 @@ final class VideoGameRepository extends ServiceEntityRepository
 
         return new Paginator($queryBuilder, fetchJoinCollection: true);
     }
+
+    /**
+     * @param array<int> $tagIds
+     *
+     * @return array<VideoGame>
+    */
+    public function getVideoGamesByTagIds(array $tagIds): array
+    {
+        return $this->createQueryBuilder('vg')
+            ->innerJoin('vg.tags', 't')
+            ->where('t.id IN (:tagIds)')
+            ->groupBy('vg.id')
+            ->having('COUNT(DISTINCT t.id) = :tagCount')
+            ->setParameter('tagIds', $tagIds)
+            ->setParameter('tagCount', count($tagIds))
+            ->getQuery()->getResult();
+    }
 }

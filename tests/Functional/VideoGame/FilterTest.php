@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\VideoGame;
 
+use App\Doctrine\Repository\VideoGameRepository;
+use App\Model\Entity\Tag;
+use App\Model\Entity\VideoGame;
 use App\Tests\Functional\FunctionalTestCase;
 
 final class FilterTest extends FunctionalTestCase
@@ -25,5 +28,69 @@ final class FilterTest extends FunctionalTestCase
         $this->client->submitForm('Filtrer', ['filter[search]' => 'Jeu vidéo 49'], 'GET');
         self::assertResponseIsSuccessful();
         self::assertSelectorCount(1, 'article.game-card');
+    }
+
+    /**
+     * @dataProvider provideTagsData
+     */
+    public function testShouldFilterVideoGamesByTags(array $data = []): void
+    {
+        // Récupérer les JV avec ces tags
+        $entityManager = $this->getEntityManager();
+        $videoGameRepository = $this->service(VideoGameRepository::class);
+
+        $tags = $entityManager->getRepository(Tag::class)->findAll();
+        $data = $this->removeUnexistingTags($data, $tags);
+
+        $selectedTagIds = array_map(fn (int $value) => $tags[$value]->getId(), $data);
+        $videoGames = $videoGameRepository->getVideoGamesByTagIds($selectedTagIds);
+
+        // se connecter à la liste des jeux
+        $crawler = $this->get('/');
+
+        // Soumettre le formulaire de filtre avec les données fournies
+        $form = $crawler->selectButton('Filtrer')->form();
+        $this->tickCheckboxes($form, 'filter[tags]', $data);
+        $this->client->submit($form);
+
+        // Vérifier que le nombre de résultats correspond à ce qui est présent en BDD
+        $expectedResults = $this->calculateExpectedResult($data, $videoGames);
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount($expectedResults, 'article.game-card');
+    }
+
+    private function calculateExpectedResult(array $data, array $videoGames): int
+    {
+        $shouldFilter = $data !== [];
+        $videoGamesCount = count($videoGames);
+        if (!$shouldFilter || $videoGamesCount >= 10){
+            return 10;
+        }
+        return $videoGamesCount;
+    }
+
+    private function removeUnexistingTags(array $data, array $tags): array
+    {
+        $tagCount = count($tags);
+        foreach ($data as $key => $value){
+            if ($value < 0 || $value >= $tagCount){
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
+    }
+
+    public function provideTagsData(): iterable
+    {
+        return [
+            [[0, 1]], // Two exisiting tags
+            [[2]], // One existing tag
+            [[0, 2, 3]], // Three existing tags
+            [[7]], // Non existing tag
+            [[8, 2]], // One non existing tag and one existing tag
+            [[]] // No tags
+        ];
     }
 }
