@@ -28,3 +28,7 @@ php.local.ini
 
 /public/test-coverage/
 
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
