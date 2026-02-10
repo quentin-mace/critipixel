@@ -16,8 +16,20 @@ use Symfony\Component\HttpFoundation\Response;
 class ReviewFormTest extends WebTestCase
 {
     private ?KernelBrowser $client = null;
+
+    /**
+     * @var ?EntityRepository<VideoGame>
+     */
     private ?EntityRepository $gamesRepository = null;
+
+    /**
+     * @var ?EntityRepository<User>
+     */
     private ?EntityRepository $userRepository = null;
+
+    /**
+     * @var ?EntityRepository<Review>
+     */
     private ?EntityRepository $reviewRepository = null;
     private ?VideoGame $randomVideoGame = null;
     private ?User $testUser = null;

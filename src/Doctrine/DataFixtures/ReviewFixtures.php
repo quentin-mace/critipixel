@@ -29,12 +29,17 @@ final class ReviewFixtures extends Fixture implements DependentFixtureInterface
         $users = $manager->getRepository(User::class)->findAll();
         $videoGames = $manager->getRepository(VideoGame::class)->findBy([], limit: 40);
 
-        $reviews = array_fill_callback(0, 500, fn (int $index): Review => (new Review())
-            ->setVideoGame($videoGames[rand(0,count($videoGames)-1)])
-            ->setUser($users[rand(0, count($users)-1)])
-            ->setRating(rand(1, 5))
-            ->setComment($index % 2 === 0 ? null : $this->faker->paragraphs(1, true))
-        );
+        $reviews = [];
+        for ($i = 0; $i < 500; $i++) {
+            $review = new Review();
+            $review
+                ->setVideoGame($videoGames[rand(0,count($videoGames)-1)])
+                ->setUser($users[rand(0, count($users)-1)])
+                ->setRating(rand(1, 5))
+                ->setComment($i % 2 === 0 ? null : $this->faker->paragraphs(1, true));
+
+            $reviews[] = $review;
+        }
 
         array_walk($reviews, [$manager, 'persist']);
 

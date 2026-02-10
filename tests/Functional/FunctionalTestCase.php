@@ -29,13 +29,16 @@ abstract class FunctionalTestCase extends WebTestCase
     /**
      * @template T
      * @param class-string<T> $id
-     * @return T
+     * @return object
      */
     protected function service(string $id): object
     {
         return $this->client->getContainer()->get($id);
     }
 
+    /**
+     * @param array<string, mixed> $parameters
+     */
     protected function get(string $uri, array $parameters = []): Crawler
     {
         return $this->client->request('GET', $uri, $parameters);
@@ -48,6 +51,9 @@ abstract class FunctionalTestCase extends WebTestCase
         $this->client->loginUser($user);
     }
 
+    /**
+     * @param array<int> $checkboxIndexes
+     */
     protected function tickCheckboxes(Form $form, string $fieldName, array $checkboxIndexes): void
     {
         $select = $form[$fieldName];

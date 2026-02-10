@@ -25,17 +25,22 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
     {
         $tags = $manager->getRepository(Tag::class)->findAll();
 
-        $videoGames = array_fill_callback(0, 50, fn (int $index): VideoGame => (new VideoGame)
-            ->setTitle(sprintf('Jeu vidéo %d', $index))
-            ->setDescription($this->faker->paragraphs(10, true))
-            ->setReleaseDate(new DateTimeImmutable())
-            ->setTest($this->faker->paragraphs(6, true))
-            ->setRating(rand(1,5))
-            ->setImageName(sprintf('video_game_%d.png', $index))
-            ->setImageSize(2_098_872)
-            ->addTag($index % 2 === 0 ? $tags[rand(0, count($tags)-1)] : null)
-            ->addTag($index % 3 === 0 ? $tags[rand(0, count($tags)-1)] : null)
-        );
+        $videoGames = [];
+        for ($i = 0; $i < 50; $i++) {
+            $videoGame = new VideoGame();
+            $videoGame
+                ->setTitle(sprintf('Jeu vidéo %d', $i))
+                ->setDescription($this->faker->paragraphs(10, true))
+                ->setReleaseDate(new DateTimeImmutable())
+                ->setTest($this->faker->paragraphs(6, true))
+                ->setRating(rand(1,5))
+                ->setImageName(sprintf('video_game_%d.png', $i))
+                ->setImageSize(2_098_872)
+                ->addTag($i % 2 === 0 ? $tags[rand(0, count($tags)-1)] : null)
+                ->addTag($i % 3 === 0 ? $tags[rand(0, count($tags)-1)] : null);
+
+            $videoGames[] = $videoGame;
+        }
 
         array_walk($videoGames, [$manager, 'persist']);
 

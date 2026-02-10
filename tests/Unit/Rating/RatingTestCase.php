@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 
 class RatingTestCase extends TestCase
 {
+    /**
+     * @param array<int, int> $ratings
+     */
     protected function createVideoGameWithRatings(array $ratings): VideoGame
     {
         $videoGame = new VideoGame();

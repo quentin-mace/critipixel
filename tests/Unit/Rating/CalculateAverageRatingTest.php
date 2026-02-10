@@ -2,19 +2,14 @@
 
 namespace App\Tests\Unit\Rating;
 
-use App\Model\Entity\Review;
-use App\Model\Entity\VideoGame;
-use App\Rating\CalculateAverageRating;
 use App\Rating\RatingHandler;
-use Doctrine\Common\Collections\ArrayCollection;
-use PHPUnit\Framework\TestCase;
-use Doctrine\Common\Collections\Collection;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 class CalculateAverageRatingTest extends RatingTestCase
 {
     /**
      * @dataProvider ratingsForVideoGame
+     *
+     * @param array<int> $ratings
      */
     public function testCalculateAverage(array $ratings, ?int $average): void
     {
@@ -26,6 +21,9 @@ class CalculateAverageRatingTest extends RatingTestCase
         $this->assertEquals($average, $videoGame->getAverageRating());
     }
 
+    /**
+     * @return array<array{array<int>, ?int}>
+     */
     public function ratingsForVideoGame(): array
     {
         return [
