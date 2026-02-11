@@ -7,20 +7,17 @@ use App\Model\Entity\User;
 use App\Model\Entity\VideoGame;
 use App\Rating\CalculateAverageRating;
 use App\Rating\CountRatingsPerValue;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Generator;
-
-use function array_fill_callback;
 
 final class ReviewFixtures extends Fixture implements DependentFixtureInterface
 {
     public function __construct(
         private readonly Generator $faker,
         private readonly CalculateAverageRating $calculateAverageRating,
-        private readonly CountRatingsPerValue $countRatingsPerValue
+        private readonly CountRatingsPerValue $countRatingsPerValue,
     ) {
     }
 
@@ -30,13 +27,13 @@ final class ReviewFixtures extends Fixture implements DependentFixtureInterface
         $videoGames = $manager->getRepository(VideoGame::class)->findBy([], limit: 40);
 
         $reviews = [];
-        for ($i = 0; $i < 500; $i++) {
+        for ($i = 0; $i < 500; ++$i) {
             $review = new Review();
             $review
-                ->setVideoGame($videoGames[rand(0,count($videoGames)-1)])
-                ->setUser($users[rand(0, count($users)-1)])
+                ->setVideoGame($videoGames[rand(0, count($videoGames) - 1)])
+                ->setUser($users[rand(0, count($users) - 1)])
                 ->setRating(rand(1, 5))
-                ->setComment($i % 2 === 0 ? null : $this->faker->paragraphs(1, true));
+                ->setComment(0 === $i % 2 ? null : $this->faker->paragraphs(1, true));
 
             $reviews[] = $review;
         }

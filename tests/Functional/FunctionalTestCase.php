@@ -28,8 +28,8 @@ abstract class FunctionalTestCase extends WebTestCase
 
     /**
      * @template T
+     *
      * @param class-string<T> $id
-     * @return object
      */
     protected function service(string $id): object
     {
@@ -57,7 +57,7 @@ abstract class FunctionalTestCase extends WebTestCase
     protected function tickCheckboxes(Form $form, string $fieldName, array $checkboxIndexes): void
     {
         $select = $form[$fieldName];
-        foreach ($checkboxIndexes as $index){
+        foreach ($checkboxIndexes as $index) {
             $checkbox = $select[$index];
             $checkbox->tick();
         }

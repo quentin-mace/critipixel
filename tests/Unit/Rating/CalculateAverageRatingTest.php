@@ -29,24 +29,24 @@ class CalculateAverageRatingTest extends RatingTestCase
         return [
             [
                 [1],
-                1
+                1,
             ],
             [
-                [2,2,2,2],
-                2
+                [2, 2, 2, 2],
+                2,
             ],
             [
-                [1,2,3,5,5],
-                4
+                [1, 2, 3, 5, 5],
+                4,
             ],
             [
                 [],
-                null
+                null,
             ],
             [
-                [1,1,1,5,5,5],
-                3
-            ]
+                [1, 1, 1, 5, 5, 5],
+                3,
+            ],
         ];
     }
 }

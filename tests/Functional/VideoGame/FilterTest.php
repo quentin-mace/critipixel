@@ -64,15 +64,16 @@ final class FilterTest extends FunctionalTestCase
 
     /**
      * @param array<int, int> $data
-     * @param VideoGame[] $videoGames
+     * @param VideoGame[]     $videoGames
      */
     private function calculateExpectedResult(array $data, array $videoGames): int
     {
-        $shouldFilter = $data !== [];
+        $shouldFilter = [] !== $data;
         $videoGamesCount = count($videoGames);
-        if (!$shouldFilter || $videoGamesCount >= 10){
+        if (!$shouldFilter || $videoGamesCount >= 10) {
             return 10;
         }
+
         return $videoGamesCount;
     }
 
@@ -85,8 +86,8 @@ final class FilterTest extends FunctionalTestCase
     private function removeUnexistingTags(array $data, array $tags): array
     {
         $tagCount = count($tags);
-        foreach ($data as $key => $value){
-            if ($value < 0 || $value >= $tagCount){
+        foreach ($data as $key => $value) {
+            if ($value < 0 || $value >= $tagCount) {
                 unset($data[$key]);
             }
         }
@@ -105,7 +106,7 @@ final class FilterTest extends FunctionalTestCase
             [[0, 2, 3]], // Three existing tags
             [[7]], // Non existing tag
             [[8, 2]], // One non existing tag and one existing tag
-            [[]] // No tags
+            [[]], // No tags
         ];
     }
 }

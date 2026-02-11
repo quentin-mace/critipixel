@@ -2,10 +2,7 @@
 
 namespace App\Tests\Unit\Rating;
 
-use App\Model\Entity\Review;
-use App\Model\Entity\VideoGame;
 use App\Rating\RatingHandler;
-use PHPUnit\Framework\TestCase;
 
 class CountRatingPerValueTest extends RatingTestCase
 {
@@ -37,24 +34,24 @@ class CountRatingPerValueTest extends RatingTestCase
         return [
             [
                 [1],
-                [1,0,0,0,0]
+                [1, 0, 0, 0, 0],
             ],
             [
-                [2,2,2,2],
-                [0,4,0,0,0]
+                [2, 2, 2, 2],
+                [0, 4, 0, 0, 0],
             ],
             [
-                [1,2,3,4,5],
-                [1,1,1,1,1]
+                [1, 2, 3, 4, 5],
+                [1, 1, 1, 1, 1],
             ],
             [
                 [],
-                [0,0,0,0,0]
+                [0, 0, 0, 0, 0],
             ],
             [
-                [1,1,1,5,5,5],
-                [3,0,0,0,3]
-            ]
+                [1, 1, 1, 5, 5, 5],
+                [3, 0, 0, 0, 3],
+            ],
         ];
     }
 }
