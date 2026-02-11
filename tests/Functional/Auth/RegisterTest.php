@@ -43,16 +43,16 @@ final class RegisterTest extends FunctionalTestCase
     }
 
     /**
-     * @return iterable<string, array<string, string>>
+     * @return iterable<string, array<array<string, string>>>
      */
     public static function provideInvalidFormData(): iterable
     {
-        yield 'empty username' => self::getFormData(['register[username]' => '']);
-        yield 'non unique username' => self::getFormData(['register[username]' => 'user+1']);
-        yield 'too long username' => self::getFormData(['register[username]' => 'Lorem ipsum dolor sit amet orci aliquam']);
-        yield 'empty email' => self::getFormData(['register[email]' => '']);
-        yield 'non unique email' => self::getFormData(['register[email]' => 'user+1@email.com']);
-        yield 'invalid email' => self::getFormData(['register[email]' => 'fail']);
+        yield 'empty username' => [self::getFormData(['register[username]' => ''])];
+        yield 'non unique username' => [self::getFormData(['register[username]' => 'user+1'])];
+        yield 'too long username' => [self::getFormData(['register[username]' => 'Lorem ipsum dolor sit amet orci aliquam'])];
+        yield 'empty email' => [self::getFormData(['register[email]' => ''])];
+        yield 'non unique email' => [self::getFormData(['register[email]' => 'user+1@email.com'])];
+        yield 'invalid email' => [self::getFormData(['register[email]' => 'fail'])];
     }
 
     /**

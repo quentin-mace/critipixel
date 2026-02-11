@@ -68,7 +68,7 @@ class ReviewFormTest extends WebTestCase
 
         // Selectionner le formulaire de note et remplir
         $form = $crawler->selectButton('Poster')->form();
-        $form['review[rating]'] = 5;
+        $form['review[rating]'] = '5';
         $form['review[comment]'] = 'Un commentaire random';
 
         // Envoyer le formulaire
@@ -106,7 +106,7 @@ class ReviewFormTest extends WebTestCase
         // Selectionner le formulaire de note et remplir
         $form = $crawler->selectButton('Poster')->form();
         $form->disableValidation();
-        $form['review[rating]'] = 6;
+        $form['review[rating]'] = '6';
         $form['review[comment]'] = 'Un commentaire random';
 
         // Envoyer le formulaire
