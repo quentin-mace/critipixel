@@ -40,7 +40,7 @@ final class Pagination implements \IteratorAggregate, \Countable
 
     public function getLastPage(): int
     {
-        if (!$this->initialized) {
+        if (! $this->initialized) {
             throw new \RuntimeException('Pagination is not initialized');
         }
 
@@ -66,7 +66,7 @@ final class Pagination implements \IteratorAggregate, \Countable
      */
     public function getIterator(): \Traversable
     {
-        if (!$this->initialized) {
+        if (! $this->initialized) {
             throw new \RuntimeException('Pagination is not initialized');
         }
 
@@ -75,7 +75,7 @@ final class Pagination implements \IteratorAggregate, \Countable
 
     public function getInfo(): Info
     {
-        if (!$this->initialized) {
+        if (! $this->initialized) {
             throw new \RuntimeException('Pagination is not initialized');
         }
 

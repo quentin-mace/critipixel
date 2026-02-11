@@ -70,7 +70,7 @@ final class FilterTest extends FunctionalTestCase
     {
         $shouldFilter = [] !== $data;
         $videoGamesCount = count($videoGames);
-        if (!$shouldFilter || $videoGamesCount >= 10) {
+        if (! $shouldFilter || $videoGamesCount >= 10) {
             return 10;
         }
 
