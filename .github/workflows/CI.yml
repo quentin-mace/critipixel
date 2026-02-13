@@ -104,10 +104,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
-      - name: 📥 Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: symfony-env
+      - name: 📚 Install dependencies
+        run: composer install --prefer-dist --no-progress
       - name: 🗄️ Create database
         run: php bin/console doctrine:database:create --env=test
       - name: 🔄 Run migrations
