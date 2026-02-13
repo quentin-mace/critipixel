@@ -64,7 +64,7 @@ jobs:
         with:
           name: symfony-env
       - name: 🔎 Run PHPStan
-        run: vendor/bin/phpstan analyse --no-progress --error-format=github
+        run: php vendor/bin/phpstan analyse --no-progress --error-format=github
 
   cs-fixer:
     name: ✨ Code Style (PHP-CS-Fixer)
@@ -83,7 +83,7 @@ jobs:
         with:
           name: symfony-env
       - name: ✨ Run PHP-CS-Fixer
-        run: vendor/bin/php-cs-fixer fix --dry-run --diff --format=github
+        run: php vendor/bin/php-cs-fixer fix --dry-run --diff --format=github
 
   phpunit:
     name: 🧪 Unit tests with PHPUnit
@@ -102,4 +102,4 @@ jobs:
         with:
           name: symfony-env
       - name: 🧪 Run PHPUnit
-        run: vendor/bin/phpunit
+        run: php vendor/bin/phpunit
