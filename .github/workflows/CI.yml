@@ -83,7 +83,7 @@ jobs:
         with:
           name: symfony-env
       - name: ✨ Run PHP-CS-Fixer
-        run: php vendor/bin/php-cs-fixer fix --dry-run --diff --format=github
+        run: php vendor/bin/php-cs-fixer fix --dry-run --diff
 
   phpunit:
     name: 🧪 Unit tests with PHPUnit
