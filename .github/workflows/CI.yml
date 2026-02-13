@@ -44,6 +44,7 @@ jobs:
           path: |
             vendor/
             var/cache/test/
+            var/sass/
             public/build/
           retention-days: 1
 
