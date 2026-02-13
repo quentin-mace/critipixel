@@ -29,14 +29,6 @@ jobs:
           php-version: ${{ env.PHP_VERSION }}
       - name: 📚 Install dependencies
         run: composer install --prefer-dist --no-progress
-      - name: 🗄️ Create database
-        run: php bin/console doctrine:database:create --env=test
-      - name: 🔄 Run migrations
-        run: php bin/console doctrine:migrations:migrate -n --env=test
-      - name: 🌱 Load fixtures
-        run: php bin/console doctrine:fixtures:load -n --purge-with-truncate --env=test
-      - name: 🎨 Build assets
-        run: php bin/console sass:build
       - name: 📤 Create artifact
         uses: actions/upload-artifact@v4
         with:
@@ -44,7 +36,6 @@ jobs:
           path: |
             vendor/
             var/cache/test/
-            var/sass/
             public/build/
           retention-days: 1
 
@@ -117,10 +108,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: symfony-env
-      - name: 🗄️ Setup test database
-        run: |
-          php bin/console doctrine:database:create --env=test
-          php bin/console doctrine:migrations:migrate -n --env=test
-          php bin/console doctrine:fixtures:load -n --purge-with-truncate --env=test
+      - name: 🗄️ Create database
+        run: php bin/console doctrine:database:create --env=test
+      - name: 🔄 Run migrations
+        run: php bin/console doctrine:migrations:migrate -n --env=test
+      - name: 🌱 Load fixtures
+        run: php bin/console doctrine:fixtures:load -n --purge-with-truncate --env=test
+      - name: 🎨 Build assets
+        run: php bin/console sass:build
       - name: 🧪 Run PHPUnit
         run: php vendor/bin/phpunit
