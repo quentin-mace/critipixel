@@ -91,6 +91,7 @@
             "composer db-test",
             "symfony php bin/phpunit"
         ],
+        "test:coverage": "XDEBUG_MODE=coverage php bin/phpunit --coverage-html coverage",
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
