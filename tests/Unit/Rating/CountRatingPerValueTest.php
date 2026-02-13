@@ -2,15 +2,15 @@
 
 namespace App\Tests\Unit\Rating;
 
-use App\Model\Entity\Review;
-use App\Model\Entity\VideoGame;
 use App\Rating\RatingHandler;
-use PHPUnit\Framework\TestCase;
 
 class CountRatingPerValueTest extends RatingTestCase
 {
     /**
      * @dataProvider ratingsForCountRating
+     *
+     * @param array<int> $ratings
+     * @param array<int> $expectedValues
      */
     public function testCountRatingsPerValue(array $ratings, array $expectedValues): void
     {
@@ -26,29 +26,32 @@ class CountRatingPerValueTest extends RatingTestCase
         $this->assertEquals($expectedValues[4], $videoGame->getNumberOfRatingsPerValue()->getNumberOfFive());
     }
 
+    /**
+     * @return array<array{array<int>, array<int>}>
+     */
     public function ratingsForCountRating(): array
     {
         return [
             [
                 [1],
-                [1,0,0,0,0]
+                [1, 0, 0, 0, 0],
             ],
             [
-                [2,2,2,2],
-                [0,4,0,0,0]
+                [2, 2, 2, 2],
+                [0, 4, 0, 0, 0],
             ],
             [
-                [1,2,3,4,5],
-                [1,1,1,1,1]
+                [1, 2, 3, 4, 5],
+                [1, 1, 1, 1, 1],
             ],
             [
                 [],
-                [0,0,0,0,0]
+                [0, 0, 0, 0, 0],
             ],
             [
-                [1,1,1,5,5,5],
-                [3,0,0,0,3]
-            ]
+                [1, 1, 1, 5, 5, 5],
+                [3, 0, 0, 0, 3],
+            ],
         ];
     }
 }

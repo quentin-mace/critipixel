@@ -2,7 +2,6 @@
 
 namespace App\Tests\Functional;
 
-use App\Doctrine\Repository\VideoGameRepository;
 use App\Model\Entity\Review;
 use App\Model\Entity\User;
 use App\Model\Entity\VideoGame;
@@ -16,8 +15,20 @@ use Symfony\Component\HttpFoundation\Response;
 class ReviewFormTest extends WebTestCase
 {
     private ?KernelBrowser $client = null;
+
+    /**
+     * @var ?EntityRepository<VideoGame>
+     */
     private ?EntityRepository $gamesRepository = null;
+
+    /**
+     * @var ?EntityRepository<User>
+     */
     private ?EntityRepository $userRepository = null;
+
+    /**
+     * @var ?EntityRepository<Review>
+     */
     private ?EntityRepository $reviewRepository = null;
     private ?VideoGame $randomVideoGame = null;
     private ?User $testUser = null;
@@ -28,13 +39,13 @@ class ReviewFormTest extends WebTestCase
         $this->client = static::createClient();
 
         $this->gamesRepository = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(VideoGame::class);
-        $this->userRepository =  $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(User::class);
-        $this->reviewRepository =  $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Review::class);
+        $this->userRepository = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(User::class);
+        $this->reviewRepository = $this->client->getContainer()->get('doctrine.orm.entity_manager')->getRepository(Review::class);
 
         $videoGames = $this->gamesRepository->findAll();
-        $this->randomVideoGame = $videoGames[rand(0, count($videoGames)-1)];
+        $this->randomVideoGame = $videoGames[rand(0, count($videoGames) - 1)];
 
-        $this->testUser = $this->userRepository->findOneBy(['email'=>'user+0@email.com']);
+        $this->testUser = $this->userRepository->findOneBy(['email' => 'user+0@email.com']);
         $this->urlGenerator = $this->client->getContainer()->get('router.default');
     }
 
@@ -44,7 +55,7 @@ class ReviewFormTest extends WebTestCase
         $this->client->loginUser($this->testUser);
 
         // Supprimer toutes les reviews de cet utilisateur sur un jeu random
-        $reviewsToDelete = $this->reviewRepository->findBy(['user'=>$this->testUser, 'videoGame'=>$this->randomVideoGame]);
+        $reviewsToDelete = $this->reviewRepository->findBy(['user' => $this->testUser, 'videoGame' => $this->randomVideoGame]);
         foreach ($reviewsToDelete as $reviewToDelete) {
             $this->client->getContainer()->get('doctrine.orm.entity_manager')->remove($reviewToDelete);
             $this->client->getContainer()->get('doctrine.orm.entity_manager')->flush();
@@ -56,7 +67,7 @@ class ReviewFormTest extends WebTestCase
 
         // Selectionner le formulaire de note et remplir
         $form = $crawler->selectButton('Poster')->form();
-        $form['review[rating]'] = 5;
+        $form['review[rating]'] = '5';
         $form['review[comment]'] = 'Un commentaire random';
 
         // Envoyer le formulaire
@@ -67,7 +78,7 @@ class ReviewFormTest extends WebTestCase
         $crawler = $this->client->followRedirect();
 
         // Verifier que la note est bien présente en BDD
-        $reviews = $this->reviewRepository->findBy(['user'=>$this->testUser, 'videoGame'=>$this->randomVideoGame]);
+        $reviews = $this->reviewRepository->findBy(['user' => $this->testUser, 'videoGame' => $this->randomVideoGame]);
         $this->assertCount(1, $reviews);
         $this->assertSame(5, $reviews[0]->getRating());
         $this->assertSame('Un commentaire random', $reviews[0]->getComment());
@@ -82,7 +93,7 @@ class ReviewFormTest extends WebTestCase
         $this->client->loginUser($this->testUser);
 
         // Supprimer toutes les reviews de cet utilisateur sur un jeu random
-        $reviewsToDelete = $this->reviewRepository->findBy(['user'=>$this->testUser, 'videoGame'=>$this->randomVideoGame]);
+        $reviewsToDelete = $this->reviewRepository->findBy(['user' => $this->testUser, 'videoGame' => $this->randomVideoGame]);
         foreach ($reviewsToDelete as $reviewToDelete) {
             $this->client->getContainer()->get('doctrine.orm.entity_manager')->remove($reviewToDelete);
             $this->client->getContainer()->get('doctrine.orm.entity_manager')->flush();
@@ -94,7 +105,7 @@ class ReviewFormTest extends WebTestCase
         // Selectionner le formulaire de note et remplir
         $form = $crawler->selectButton('Poster')->form();
         $form->disableValidation();
-        $form['review[rating]'] = 6;
+        $form['review[rating]'] = '6';
         $form['review[comment]'] = 'Un commentaire random';
 
         // Envoyer le formulaire
@@ -116,7 +127,7 @@ class ReviewFormTest extends WebTestCase
         $this->assertSelectorNotExists('form [name="review"]', 'Poster');
 
         // Tenter de poster comme si on envoyait le formulaire
-        $data = ['review' => [ 'rating' => 4, 'comment' => 'Un commentaire random' ] ];
+        $data = ['review' => ['rating' => 4, 'comment' => 'Un commentaire random']];
 
         $this->client->request(
             Request::METHOD_POST,

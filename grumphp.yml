@@ -1,0 +1,25 @@
+grumphp:
+  # Arrête au premier échec
+  stop_on_failure: false
+
+  ignore_unstaged_changes: false
+
+  tasks:
+    phpunit:
+      testsuite: ~
+      always_execute: false
+      metadata:
+        priority: 100
+
+    phpstan:
+      level: 6
+      configuration: phpstan.dist.neon
+      memory_limit: "-1"
+      metadata:
+        priority: 200
+
+    phpcsfixer:
+      config: '.php-cs-fixer.dist.php'
+      allow_risky: true
+      metadata:
+        priority: 300
