@@ -1,0 +1,15 @@
+name:     CD
+
+#on:       [ release ]
+on:       [ push ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      SSHPASS: ${{ secrets.VPS_PASS }}
+
+
+    steps:
+      - run: echo "Deploying..."
