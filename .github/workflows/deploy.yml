@@ -12,4 +12,16 @@ jobs:
 
 
     steps:
-      - run: echo "Deploying..."
+      - uses: actions/checkout@v2
+      - name: Install SSHPASS
+        run:
+          sudo apt update && sudo apt install sshpass
+      - name: Deploy to VPS
+        run:
+          sshpass -e ssh -o stricthostkeychecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+          "cd sites/critipixel.quentinmace.fr/ &&
+          git pull origin master &&
+          composer install &&
+          php bin/console doctrine:fixtures:load &&
+          php bin/console asset-map:compile &&
+          php bin/console cache:clear"
