@@ -16,6 +16,20 @@ jobs:
       - name: Install SSHPASS
         run:
           sudo apt update && sudo apt install sshpass
+      - name: Public IP
+        id: ip
+        uses: haythem/public-ip@v1.3
+
+      - name: Add IP to o2switch whitelist
+        run: | 
+          curl -sm 45 -H "Authorization: cpanel ${{ secrets.VPS_USER }}:${{ secrets.VPS_TOKEN }}" \
+            "https://${{ secrets.VPS_HOST }}:2083/execute/SshWhitelist/add?address=${{ steps.ip.outputs.ipv4 }}&port=22"
+
+      - name: Making sure the IP is whitelisted
+        run: |
+          curl -sm 45 -H'Authorization: cpanel ${{ secrets.VPS_USER }}:${{ secrets.VPS_TOKEN }}' \
+          'https://${{ secrets.VPS_HOST }}:2083/execute/SshWhitelist/list' | grep ${{ steps.ip.outputs.ipv4 }}
+
       - name: Deploy to VPS
         run:
           sshpass -e ssh -o stricthostkeychecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
@@ -25,3 +39,11 @@ jobs:
           php bin/console doctrine:fixtures:load &&
           php bin/console asset-map:compile &&
           php bin/console cache:clear"
+
+      - name: Remove IP from o2switch whitelist
+        run: |
+          curl -sm 45 -H "Authorization: cpanel ${{ secrets.VPS_USER }}:${{ secrets.VPS_TOKEN }}" \
+            "https://${{ secrets.VPS_HOST }}:2083/execute/SshWhitelist/remove?address=${{ steps.ip.outputs.ipv4 }}&port=22&direction=in"
+          curl -sm 45 -H "Authorization: cpanel ${{ secrets.VPS_USER }}:${{ secrets.VPS_TOKEN }}" \
+            "https://${{ secrets.VPS_HOST }}:2083/execute/SshWhitelist/remove?address=${{ steps.ip.outputs.ipv4 }}&port=22&direction=out"
+          
