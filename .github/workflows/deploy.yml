@@ -1,7 +1,7 @@
 name:     CD
 
-#on:       [ release ]
-on:       [ push ]
+on:       [ release ]
+
 
 jobs:
   deploy:
@@ -35,8 +35,8 @@ jobs:
           sshpass -e ssh -o stricthostkeychecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
           "cd sites/critipixel.quentinmace.fr/ &&
           git fetch origin &&
-          git checkout 24-CD-workflow &&
-          git pull origin 24-CD-workflow &&
+          git checkout main &&
+          git pull origin main &&
           composer install --no-interaction --no-dev --optimize-autoloader &&
           php bin/console doctrine:migrations:migrate --no-interaction &&
           php bin/console doctrine:fixtures:load --no-interaction &&
