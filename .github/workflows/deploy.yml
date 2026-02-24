@@ -37,6 +37,7 @@ jobs:
           git fetch origin &&
           git checkout 24-CD-workflow &&
           git pull origin 24-CD-workflow &&
+          composer update &&
           composer install &&
           php bin/console doctrine:fixtures:load &&
           php bin/console asset-map:compile &&
