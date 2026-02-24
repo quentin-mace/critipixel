@@ -36,6 +36,7 @@ jobs:
           "cd sites/critipixel.quentinmace.fr/ &&
           git fetch origin &&
           git checkout main &&
+          git reset --hard origin/main &&
           git pull origin main &&
           composer install --no-interaction --no-dev --optimize-autoloader &&
           php bin/console doctrine:migrations:migrate --no-interaction &&
