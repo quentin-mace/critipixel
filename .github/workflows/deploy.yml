@@ -34,7 +34,6 @@ jobs:
         run:
           sshpass -e ssh -o stricthostkeychecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
           "cd sites/critipixel.quentinmace.fr/ &&
-#          git pull origin main &&
           git checkout 24-CD-workflow &&
           git pull origin 24-CD-workflow &&
           composer install &&
