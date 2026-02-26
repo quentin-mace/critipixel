@@ -87,18 +87,19 @@
             "symfony console doctrine:database:drop -f --if-exists",
             "symfony console doctrine:database:create",
             "symfony console doctrine:migrations:migrate -n",
-            "symfony console doctrine:fixtures:load -n --purge-with-truncate"
+            "symfony console doctrine:fixtures:load -n"
         ],
         "db-test": [
             "symfony console doctrine:database:drop -f --if-exists --env=test",
             "symfony console doctrine:database:create --env=test",
             "symfony console doctrine:migrations:migrate -n --env=test",
-            "symfony console doctrine:fixtures:load -n --purge-with-truncate --env=test"
+            "symfony console doctrine:fixtures:load -n --env=test"
         ],
         "test": [
             "composer db-test",
             "symfony php bin/phpunit"
         ],
+        "test:coverage": "XDEBUG_MODE=coverage php bin/phpunit --coverage-html coverage",
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
@@ -121,12 +122,17 @@
         }
     },
     "require-dev": {
+        "dama/doctrine-test-bundle": "^8.2",
+        "friendsofphp/php-cs-fixer": "^3.93",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-doctrine": "^2.0",
         "phpro/grumphp": "^2.19",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "6.4.*",
         "symfony/css-selector": "6.4.*",
         "symfony/debug-bundle": "6.4.*",
         "symfony/maker-bundle": "^1.58",
+        "symfony/monolog-bundle": "^3.0",
         "symfony/phpunit-bridge": "^7.0",
         "symfony/stopwatch": "6.4.*",
         "symfony/web-profiler-bundle": "6.4.*"

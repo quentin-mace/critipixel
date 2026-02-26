@@ -21,3 +21,18 @@ php.local.ini
 /assets/vendor/
 ###< symfony/asset-mapper ###
 /.idea
+.idea/
+.idea
+/.idea/
+
+/public/test-coverage/
+
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###
