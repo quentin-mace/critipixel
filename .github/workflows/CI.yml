@@ -4,7 +4,6 @@ on:
 
 env:
   PHP_VERSION: '8.4'
-  POSTGRES_VERSION: '16-alpine'
 
 jobs:
   build:
@@ -73,16 +72,15 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
-        image: postgres:16-alpine
+      mysql:
+        image: mysql:8.0
         ports:
-          - 5432:5432
+          - 3306:3306
         env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_DB: postgres
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: critipixel
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "mysqladmin ping -h 127.0.0.1 -u root -proot"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5

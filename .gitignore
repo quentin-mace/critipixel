@@ -20,7 +20,6 @@ php.local.ini
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
-
 /.idea
 .idea/
 .idea
