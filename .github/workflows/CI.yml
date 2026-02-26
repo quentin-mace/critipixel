@@ -94,6 +94,8 @@ jobs:
           php-version: ${{ env.PHP_VERSION }}
       - name: 📚 Install dependencies
         run: composer install --prefer-dist --no-progress --no-scripts
+      - name: 🗺️ Install importmap vendors
+        run: php bin/console importmap:install
       - name: 🗄️ Create database
         run: php bin/console doctrine:database:create --env=test
       - name: 🔄 Run migrations

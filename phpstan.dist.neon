@@ -9,7 +9,3 @@ parameters:
         - public/
         - src/
         - tests/
-    excludePaths:
-        - tests/Functional/
-    doctrine:
-        objectManagerLoader: tests/object-manager.php
